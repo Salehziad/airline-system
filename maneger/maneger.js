@@ -3,11 +3,14 @@ require('dotenv').config();
 const {
     faker
 } = require('@faker-js/faker');
+const uuid=require('uuid').v4;
+
 const io = require('socket.io-client');
-let host = `http://localhost:${process.env.PORT}`;
+let host = `http://localhost:${process.env.PORT}/airline`;
 console.log(host);
 const menegarConnection = io.connect(host);
 setInterval(() => {
+    const id=uuid();
     let flightInfo = {
         event: 'new-flight',
         time: new Date(),
@@ -23,6 +26,6 @@ setInterval(() => {
 }, 10000);
 setTimeout(() => {
     menegarConnection.on('arrived', (payload) => {
-        console.log(`we’re greatly thankful for the amazing flight, ${payload.Details.pilot}`);
+        console.log(`we’re greatly thankful for the amazing flight, ${payload.payload.Details.flightID}`);
     })
 }, 8000);
